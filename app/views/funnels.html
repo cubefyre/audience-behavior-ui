@@ -1,0 +1,135 @@
+<div class="container sl-app-container">
+	<div class="row  bs-callout bs-callout-info">
+		<!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+		<div class="col-md-12"> 
+  			<span class="tip-show-hide" ng-hide="collapse"> 
+				Funnels are used to analyze conversion rate from one step to another. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in.	
+			</span>
+			<a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>				
+        </div>       
+	</div>	
+	<!-- funnel bar and data -->
+	<div class="row">
+  	  <div class="col-md-9">
+  		<div class="row">  		
+  			<div class="col-md-12 sl-box" ng-mouseenter="showFunnelToolbar = true" ng-mouseleave="showFunnelToolbar = false">
+	  			<!-- box header -->
+		  		<div class="row sl-box-header sl-box-header-padding">
+				   	<div class="col-md-8">
+				   		Funnels
+						<span popover-placement="right" popover="This graph shows the conversion rate at each step of the funnel you defined. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+		                <i class="fa fa-question-circle"></i>
+		            	</span>	
+		            	<!-- funnel list -->	
+						<div class="inline" ng-dropdown-multiselect="" options="funnelList" selected-model="selectedFunnel" extra-settings="funnelListSettings"
+						></div>
+						<!-- funnel toolbar -->
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-default" ng-click="prepareNewFunnel()" tooltip-placement="bottom" tooltip="Edit Funnel"><i class="fa fa-pencil"></i>
+							  </button>
+							<button type="button" class="btn btn-default" ng-click="prepareNewFunnel()" tooltip-placement="bottom" tooltip="Create New Funnel"><i class="fa fa-plus"></i></button>						  
+						</div>			   
+				    </div>			   	
+				    <div class="col-md-4">	
+			    	    <div class="input-group date-range-picker pull-right" style="min-width:'50px';">
+							<span class="input-group-addon" id="date-range-picker">
+								<i class="fa fa-calendar"></i>
+							</span>
+							<input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" 
+			    			ng-model="dateRange" min="eventDateRange.minDate" max="eventDateRange.maxDate" options="datePickerOpts"/>
+			    		</div>	
+			    	</div>
+				</div>
+				<!-- chart toolbar -->
+				<div class="row sl-box-toolbar">
+					<div class="col-md-2">&nbsp;</div>
+					<div class="col-md-10">
+						<div class="btn-group btn-group-sm pull-right" ng-init="showFunnelToolbar = false" role="group" ng-show="showFunnelToolbar">
+							<!-- breakdown funnel View-->
+							<button class="btn btn-default" 
+							ng-init="breakdownFunnelView = false" ng-hide="showTable" ng-click="breakdownFunnelView = !breakdownFunnelView; " tooltip-placement="top" tooltip="Toggle View" ng-class="{selected: breakdownFunnelView, disabled: showFilters}"><i class="fa fa-tasks" ng-class="{'fa-tasks': !breakdownFunnelView, 'fa-signal': breakdownFunnelView}"></i></button>
+							<!-- show table-->
+							<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-bar-chart': showTable}"></i></button>	
+							<!-- export data -->
+							<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+							<!-- pin to dashboard-->				
+							<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+						</div>			
+					</div>				
+				</div>
+	  			<!-- chart or table-->
+				<div class="row sl-box-content">
+					<div class="col-md-12" ng-hide="showTable">
+		  					<highchart id="trends-chart" config="funnelChartConfig"></highchart>
+					</div>
+					<div class="col-md-12" ng-show="showTable">
+						<div id="funnel-grid"  ui-grid="funnelGridOptions" class="sl-grid" ui-grid-pinning ui-grid-exporter></div>
+					</div>
+				</div> 		
+  			</div>
+  		</div>
+		<div class="row">&nbsp;</div>
+		<!-- funnel bar and data -->
+		<div class="row">
+	  		<div class="col-md-12 sl-box" ng-mouseenter="showFunnelConversionToolbar = true" ng-mouseleave="showFunnelConversionToolbar = false">
+	  			<!-- box header -->
+		  		<div class="row sl-box-header sl-box-header-padding">
+				   	<div class="col-md-8">
+				   		Conversion Rate Trend for <strong>{{selectedFunnelName}}</strong>
+						<span popover-placement="right" popover="This graph shows the conversion trend over a period." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+		                <i class="fa fa-question-circle"></i>
+		            	</span>	   
+				    </div>			   	
+				</div>
+				<!-- chart toolbar -->
+				<div class="row sl-box-toolbar">
+					<div class="col-md-2">&nbsp;</div>
+					<div class="col-md-10">
+						<div class="btn-group btn-group-sm pull-right" ng-init="showFunnelConversionToolbar = false" role="group" ng-show="showFunnelConversionToolbar">
+							<!-- export data -->
+							<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportConversionRateData()"><i class="fa fa-file-o"></i></button>					
+							<!-- pin to dashboard-->				
+							<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+						</div>			
+					</div>				
+				</div>
+	  			<!-- chart or table-->
+				<div class="row sl-box-content">
+					<div class="col-md-12" ng-hide="showTable">
+		  					<highchart id="funnel-conversion-chart" config="funnelConversionRateChartConfig"></highchart>
+					</div>
+					<div class="col-md-12" ng-show="showTable">
+						<div id="funnel-conversion-grid"  ui-grid="cohortGridOptions" class="sl-grid" ui-grid-pinning ui-grid-exporter></div>
+					</div>
+				</div> 		
+	  		</div>
+		</div>
+  	  </div>
+    <!-- segment section -->   
+    <div class="col-md-3 sl-box">
+      <!-- box header -->
+      <div class="row sl-box-header sl-box-header-padding">
+        <div class="col-md-8">
+          Apply Segments
+        <span popover-placement="right" popover="This graph shows the conversion trend over a period." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+                <i class="fa fa-question-circle"></i>
+              </span>    
+        </div>          
+      </div>
+      <!-- saved segments -->
+      <div class="row sl-box-content sl-box-segment">
+        <div class="row sl-entity" ng-repeat="(id, segment) in savedSegments" ng-mouseenter="showSegmentToolbar = true" ng-mouseleave="showSegmentToolbar = false">
+          <div class="col-md-8">
+            <h5>{{segment.title}}</h5>
+          </div>
+          <div class="col-md-4">
+            <div class="btn-group btn-group-xs pull-right" role="group" ng-show="showSegmentToolbar">
+              <button class="btn btn-default btn-xs" ng-click="loadSegment(id)"><i class="fa fa-check"></i></button>       
+              <button class="btn btn-default btn-xs" ng-click="removeSegment(id)"><i class="fa fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>       
+    </div>	  
+	</div>
+</div>

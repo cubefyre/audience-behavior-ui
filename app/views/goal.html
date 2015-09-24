@@ -1,0 +1,189 @@
+<div class="container sl-app-container">
+	<div class="row  bs-callout bs-callout-info">
+		<!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+		<div class="col-md-9"> 
+			Top Impact Pages for Goal Event:&nbsp;&nbsp;&nbsp;
+		    <!-- goal event list -->	
+            <div class="inline" ng-dropdown-multiselect="" options="goalEventsList" selected-model="selectedGoalEvent" 
+            extra-settings="goalEventsSettings" translation-texts="goalEventsText"></div> 
+			<!-- segment toolbar -->
+			<div class="btn-group pull-right" role="group">
+				<button type="button" class="btn btn-default" ng-click="segmentGeo()">Geo</button>
+				<button type="button" class="btn btn-default" ng-click="prepareNewFunnel()">Device</button>				  
+				<button type="button" class="btn btn-default" ng-click="prepareNewFunnel()">Campaign</button>	
+			</div> 		           
+        </div>
+	    <!--<div class="col-md-3 sl-section-header sl-box-header-padding border-right">-->
+	    <div class="col-md-3">	
+    	    <div class="input-group date-range-picker pull-right" style="min-width:'50px';">
+				<span class="input-group-addon" id="date-range-picker">
+					<i class="fa fa-calendar"></i>
+				</span>
+				<input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" 
+    			ng-model="dateRange" min="eventDateRange.minDate" max="eventDateRange.maxDate" options="datePickerOpts"/>
+    		</div>	
+    	</div>	        
+	</div>
+	<!-- First row of charts -->
+	<div class="row">
+		<div class="col-md-6 sl-box" ng-mouseenter="showSTGToolbar = true" ng-mouseleave="showSTGToolbar = false">
+			<!-- box header -->
+  			<div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+			   	<div class="col-md-12">
+			   		Sessions to Goal
+					<span popover-placement="right" popover="This graph shows the conversion rate at each step of the funnel you defined. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	            	</span>			   
+			    </div>			   	
+			</div>
+			<!-- chart toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-2">&nbsp;</div>
+				<div class="col-md-10">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showSTGToolbar = false" role="group" ng-show="showSTGToolbar">
+						<!-- breakdown funnel View-->
+						<button class="btn btn-default" 
+						ng-init="breakdownFunnelView = false" ng-hide="showTable" ng-click="breakdownFunnelView = !breakdownFunnelView; " tooltip-placement="top" tooltip="Toggle View" ng-class="{selected: breakdownFunnelView, disabled: showFilters}"><i class="fa fa-tasks" ng-class="{'fa-tasks': !breakdownFunnelView, 'fa-signal': breakdownFunnelView}"></i></button>
+						<!-- show table-->
+						<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-bar-chart': showTable}"></i></button>	
+						<!-- export data -->
+						<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<!-- pin to dashboard-->				
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>				
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-12">
+	  					<highchart id="stg-chart" config="stgCCO"></highchart>
+				</div>
+			</div> 		
+		</div>
+		<!--<div class="col-md-2">&nbsp;</div>-->
+		<div class="col-md-6 sl-box" ng-mouseenter="showETTGToolbar = true" ng-mouseleave="showETTGToolbar = false">
+			<!-- box header -->
+  			<div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+			   	<div class="col-md-12">
+			   		Elapsed Time to Goal
+					<span popover-placement="right" popover="This graph shows the conversion rate at each step of the funnel you defined. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	            	</span>			   
+			    </div>			   	
+			</div>
+			<!-- chart toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-2">&nbsp;</div>
+				<div class="col-md-10">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showETTGToolbar = false" role="group" ng-show="showETTGToolbar">
+						<!-- breakdown funnel View-->
+						<button class="btn btn-default" 
+						ng-init="breakdownFunnelView = false" ng-hide="showTable" ng-click="breakdownFunnelView = !breakdownFunnelView; " tooltip-placement="top" tooltip="Toggle View" ng-class="{selected: breakdownFunnelView, disabled: showFilters}"><i class="fa fa-tasks" ng-class="{'fa-tasks': !breakdownFunnelView, 'fa-signal': breakdownFunnelView}"></i></button>
+						<!-- show table-->
+						<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-bar-chart': showTable}"></i></button>	
+						<!-- export data -->
+						<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<!-- pin to dashboard-->				
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>				
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-12">
+	  					<highchart id="ettg-chart" config="ettgCCO"></highchart>
+				</div>
+			</div> 		
+		</div>		
+	</div>
+	<!-- Second row of charts -->
+	<div class="row">
+		<div class="col-md-6 sl-box" ng-mouseenter="showDOIPTGToolbar = true" ng-mouseleave="showDOIPTGToolbar = false">
+			<!-- box header -->
+  			<div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+			   	<div class="col-md-12">
+			   		Distribution of Impact Pages to Goal
+					<span popover-placement="right" popover="This graph shows the conversion rate at each step of the funnel you defined. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	            	</span>			   
+			    </div>			   	
+			</div>
+			<!-- chart toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-2">&nbsp;</div>
+				<div class="col-md-10">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showDOIPTGToolbar = false" role="group" ng-show="showDOIPTGToolbar">
+						<!-- breakdown funnel View-->
+						<button class="btn btn-default" 
+						ng-init="breakdownFunnelView = false" ng-hide="showTable" ng-click="breakdownFunnelView = !breakdownFunnelView; " tooltip-placement="top" tooltip="Toggle View" ng-class="{selected: breakdownFunnelView, disabled: showFilters}"><i class="fa fa-tasks" ng-class="{'fa-tasks': !breakdownFunnelView, 'fa-signal': breakdownFunnelView}"></i></button>
+						<!-- show table-->
+						<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-bar-chart': showTable}"></i></button>	
+						<!-- export data -->
+						<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<!-- pin to dashboard-->				
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>				
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-12">
+	  					<highchart id="doiptg-chart" config="doiptgCCO"></highchart>
+				</div>
+			</div> 		
+		</div>
+		<!--<div class="col-md-2">&nbsp;</div>-->
+		<div class="col-md-6 sl-box" ng-mouseenter="showSDTGToolbar = true" ng-mouseleave="showSDTGToolbar = false">
+			<!-- box header -->
+  			<div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+			   	<div class="col-md-12">
+			   		Average Session Duration to Goal
+					<span popover-placement="right" popover="This graph shows the conversion rate at each step of the funnel you defined. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	            	</span>			   
+			    </div>			   	
+			</div>
+			<!-- chart toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-2">&nbsp;</div>
+				<div class="col-md-10">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showSDTGToolbar = false" role="group" ng-show="showSDTGToolbar">
+						<!-- breakdown funnel View-->
+						<button class="btn btn-default" 
+						ng-init="breakdownFunnelView = false" ng-hide="showTable" ng-click="breakdownFunnelView = !breakdownFunnelView; " tooltip-placement="top" tooltip="Toggle View" ng-class="{selected: breakdownFunnelView, disabled: showFilters}"><i class="fa fa-tasks" ng-class="{'fa-tasks': !breakdownFunnelView, 'fa-signal': breakdownFunnelView}"></i></button>
+						<!-- show table-->
+						<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-bar-chart': showTable}"></i></button>	
+						<!-- export data -->
+						<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<!-- pin to dashboard-->				
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>				
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-12">
+	  					<highchart id="sdtg-chart" config="sdtgCCO"></highchart>
+				</div>
+			</div> 		
+		</div>		
+	</div>	
+	<div class="row  bs-callout bs-callout-info">
+		<div class="col-md-12">
+			<span>Key Metrics For Impact Event:&nbsp;&nbsp;&nbsp;</span>
+            <!-- impact event list -->	
+            <div class="inline" ng-dropdown-multiselect="" options="impactEventsList" selected-model="selectedImpactEvent" 
+            extra-settings="impactEventsSettings" translation-texts="impactEventsText"></div> 
+		</div>
+	</div>		
+	<div class="row">
+		<div class="col-md-4 tile" ng-repeat="metric in impactEventMetrics">
+            <span class="value">{{metric.value}}</span>
+            <span class="title">{{metric.label}}</span>
+            <a href="#/segmentation" class="more" ng-class="{'blue': metric.trend >= 0, 'red': metric.trend < 0}">
+                <i class="fa" ng-class="{'fa-arrow-up': metric.trend >= 0, 'fa-arrow-down': metric.trend < 0}"></i>
+                <span>{{metric.trend}}% since last week</span>
+            </a>
+		</div>
+	</div>			
+</div> <!-- end of container -->

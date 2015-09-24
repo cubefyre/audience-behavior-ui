@@ -1,0 +1,114 @@
+<div class="row">
+	<div class="col-md-12 bs-callout bs-callout-info">
+		<div class="row">
+			<div class="col-md-1 text-center">
+	  			<span><i class="fa fa-rocket fa-2x"></i></span>
+	  		</div>
+			<div class="col-md-10">
+		  		<span> The model is ready for deployment. A set of data cubes will be built based on this data model and loaded with metrics that you defined earlier. The data cubes will be periodically populated with new metrics and data. 
+		  		</span>
+		  	</div>
+		</div>
+  	</div>
+</div>
+
+<div class="row">
+	<accordion>
+	    <accordion-group is-open="true">
+	    	<accordion-heading>
+	    		<i class="fa fa-chevron-down"></i>
+	    		Review Data Model
+	    	</accordion-heading>
+	    	<div class="row">
+	    		<div class="col-md-12">
+	    			<d3datamodel data="dataModel"></d3datamodel>
+	    		</div> 
+
+	    	</div>
+	    </accordion-group>
+	</accordion>
+</div>
+
+<div class="row">
+	<accordion>
+	    <accordion-group is-open="true">
+	    	<accordion-heading>
+	    		<i class="fa fa-chevron-down"></i>
+	    		Review Data Cubes and ETL
+	    	</accordion-heading>
+	    	<div class="row">
+	    		<div class="col-md-12">
+	    			Following set of data cubes will be built on Apache Spark cluster and updated daily. No ETL or cube building effort is required from you.
+	    			<ul>
+	    				<li>Session Metrics Cube</li>
+	    				<li>User Cube w/ Behaviorial and Activity Metrics </li>
+	    				<li>Goal - Impact Cube</li>
+	    				<li>Campaign Metrics Cube</li>
+	    			</ul>
+	    		</div> 
+	    	</div>
+	    </accordion-group>
+	</accordion>
+</div>
+
+
+<div class="row">
+	<accordion>
+	    <accordion-group is-open="true">
+	    	<accordion-heading>
+	    		<i class="fa fa-chevron-down"></i>
+	    		Choose Cluster Size
+	    	</accordion-heading>
+	    	<div class="row sl-entity">
+	    		<div class="col-md-12">
+	    			Based on your requirements including metrics and analysis and size of your event logs, we suggest deploying this app on a cluster consisiting of <strong>{{clusterSize}}</strong> nodes.
+	    		</div> 
+	    	</div>
+	    	<div class="row">&nbsp;</div>
+	    	<div class="row">
+	    		<div class="col-md-4 text-center">
+	    			<h1><strong>{{clusterSize}}</strong></h1><br/>
+	    			<input type="range" min="2" max="100" ng-init="clusterSize=10" ng-model="clusterSize" style="width: 70%;
+  margin-left: 50px;"/>
+	    		</div>
+	    		<div class="col-md-5 col-md-offset-2">
+	    			<div class="row">
+						<div class="btn-group" dropdown>
+					      <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+					      	{{selectedCloudLocation}}
+					        <span class="caret"></span>
+					      </button>
+					      <ul class="dropdown-menu">
+							<li ng-repeat="cloudLocation in cloudLocations">
+							    <a href ng-click="setCloudLocation(cloudLocation)">{{cloudLocation}}</a>
+							</li>
+					      </ul>
+					    </div>
+					</div>
+	    			<div class="row">&nbsp;</div>
+	    			<div class="row">
+						<input type="text" name="input" ng-model="accessKeyId" required ng-show="selectedCloudLocation !='Choose Cloud Location'">
+					</div>
+	    			<div class="row">&nbsp;</div>
+	    			<div class="row">
+						<input type="text" name="input" ng-model="secretAccessKey" required ng-show="selectedCloudLocation !='Choose Cloud Location'">
+					</div>
+		  		</div>
+		  	</div>
+	    </accordion-group>
+	</accordion>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg" ng-click="previousStep()">
+			<i class="fa fa-arrow-left">&nbsp;Previous Step: {{previousStepTitle(4)}}</i>
+		</a>	
+	</div>
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg pull-right" ng-click="launchApp()">
+			<i class="fa fa-rocket"></i>&nbsp;Launch App
+		</a>
+	</div>
+</div>	
+

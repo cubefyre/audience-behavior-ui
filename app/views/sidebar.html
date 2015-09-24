@@ -1,0 +1,43 @@
+<!-- end: Main Menu -->
+<!--
+<div class="sl-app-nav" >
+  <div class="container">
+    <nav class="app-nav">
+      <a class="app-nav-item" ng-class="{ active: isActive('/') }" href="#/"><i class="fa fa-tachometer"></i> Dashboard</a>
+      <a class="app-nav-item" ng-class="{ active: isActive('/funnels') }" href="#/funnels"><i class="fa fa-filter"></i> Funnels</a>
+      <a class="app-nav-item" ng-class="{ active: isActive('/segmentation') }" href="#/segmentation"><i class="fa fa-share-alt"></i> Segmentation</a>
+      <a class="app-nav-item" ng-class="{ active: isActive('/cohort') }" href="#/cohort"><i class="fa fa-group"></i> Cohort</a>
+      <a class="app-nav-item" ng-class="{ active: isActive('/trend') }" href="#/trend"><i class="fa fa-line-chart"></i> Trend</a>
+      <a class="app-nav-item ng-class="{ active: isActive('/settings') }" pull-right" href="#/settings"><i class="fa fa-wrench"></i> Settings</a>
+    </nav>
+  </div>
+</div>
+-->
+<div class="row">&nbsp;</div>
+  <ul class="nav nav-sidebar" ng-controller="MenuCtrl">
+	<li ng-class="{ active: isActive('/impact') }">  <a href="#/impact"><i class="fa fa-bullseye"></i> Impact </a></li>
+	<li ng-class="{ active: isActive('/path') }">  <a href="#/path"><i class="fa fa-random"></i> Path </a></li>
+	<li ng-class="{ active: isActive('/attribution') }">  <a href="#/attribution"><i class="fa fa-pie-chart"></i> Attribution </a></li>
+	<li ng-class="{ active: isActive('/cohort') }">  <a href="#/cohort"><i class="fa fa-group"></i> Retention</a></li>
+	<li ng-class="{ active: isActive('/segmentation') }">  <a href="#/segmentation"><i class="fa fa-share-alt"></i> Segmentation</a></li>
+	<li class="divider"></li>
+    <li ng-class="{ active: isActive('/')}"><a href="#/"><i class="fa fa-tachometer"></i> Dashboard <span class="sr-only">(current)</span></a></li>	
+	<li ng-class="{ active: isActive('/funnels') }">  <a href="#/funnels"><i class="fa fa-filter"></i> Funnels</a></li>
+	<li ng-class="{ active: isActive('/trend') }">  <a href="#/trend"><i class="fa fa-line-chart"></i> Trends</a></li>
+	<li class="divider"></li>
+	<li ng-class="{ active: isActive('/settings') }">  <a href="#/settings"><i class="fa fa-cogs"></i> Modeler</a></li>
+	<li>  <a href="#/integration"><i class="fa fa-exchange"></i> Integration</a></li>	
+	<li>  <a href="#/signout"><i class="fa fa-sign-out"></i> Signout</a></li>	
+  </ul>
+
+<!--
+ <ul class="nav nav-sidebar app-nav">
+	<li class="app-nav-item" ng-class="{ active: isActive('/')}"> <a  href="#/"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+	<li class="app-nav-item" ng-class="{ active: isActive('/funnels') }">  <a class="app-nav-item" href="#/funnels"><i class="fa fa-filter"></i> Funnels</a></li>
+	
+	<li class="app-nav-item" ng-class="{ active: isActive('/segmentation') }">  <a href="#/segmentation"><i class="fa fa-share-alt"></i> Segmentation</a></li>
+	<li class="app-nav-item" ng-class="{ active: isActive('/cohort') }">  <a href="#/cohort"><i class="fa fa-group"></i> Cohort</a></li>
+	<li class="app-nav-item" ng-class="{ active: isActive('/trend') }">  <a href="#/trend"><i class="fa fa-line-chart"></i> Trend</a></li>
+	<li class="app-nav-item" ng-class="{ active: isActive('/settings') }">  <a href="#/settings"><i class="fa fa-wrench"></i> Settings</a></li>
+</ul>
+-->

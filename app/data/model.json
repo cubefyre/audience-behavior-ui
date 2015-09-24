@@ -1,0 +1,26 @@
+{
+  "graph": [],
+  "links": [
+    {"source": 0, "target": 1},
+    {"source": 0, "target": 2},
+    {"source": 0, "target": 3},
+    {"source": 0, "target": 4},
+    {"source": 0, "target": 5},
+    {"source": 0, "target": 6},
+    {"source": 0, "target": 7},
+    {"source": 0, "target": 8}
+    ],
+  "nodes": [
+    {"size": 200, "score": 0, "id": "Activity Fact", "type": "square"},
+    {"size": 150, "score": 0, "id": "Users", "type": "square"},
+    {"size": 150, "score": 0.2, "id": "Sessions", "type": "square"},
+    {"size": 150, "score": 0.6, "id": "Campaigns", "type": "square"},
+    {"size": 150, "score": 0.4, "id": "Events", "type": "square"},
+    {"size": 150, "score": 0.8, "id": "Time", "type": "square"},
+    {"size": 150, "score": 1, "id": "Screens", "type": "square"},
+    {"size": 150, "score": 1, "id": "User-Agent", "type": "square"},
+    {"size": 150, "score": 1, "id": "Product", "type": "circle"}
+    ],
+  "directed": false,
+  "multigraph": false
+}

@@ -1,0 +1,42 @@
+<div class="row" ng-hide="analysisTemplate != null">
+	<div class="col-md-12 bs-callout bs-callout-info">
+  		<!--<alert type="info" ng-init="hideAlert = false" close="hideAlert = true" ng-hide="hideAlert"></alert>-->
+  		<span class="tip-show-hide" ng-hide="collapse">  
+  			Select from a list of predefined analysis templates, choose the metrics and segments you want to track and of your go. 
+  		</span>
+  		<a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>
+  	</div>
+</div>
+
+<div class="row" ng-repeat="template in analysisTemplates" ng-init="templateIndex = $index" ng-hide="analysisTemplate != null">
+	<div class="col-md-12 bs-callout bs-callout-default">
+		<div class="row">	
+			<div class="col-md-4 text-center"><h1><i class="fa" ng-class="template.icon" style="font-size: 50px;"></i></h1></div>
+			<div class="col-md-8">{{template.description}}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4 text-center"><h3><strong>{{template.type}}</strong></h3></div>
+			<div class="col-md-8"><a class="btn btn-default pull-right" ng-click="launchTemplate(templateIndex)" ng-disabled="!template.available">
+				<i class="fa" ng-class="{'fa-external-link': template.available, 'fa-fighter-jet':!template.available}"></i> {{template.available ? 'Launch Design' : "Coming Soon"}} </a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row" ng-if="analysisTemplate==0">
+    <div class="col-md-12">
+      <div ng-include="'views/configurator/design-goal.html'"></div>
+    </div>
+  </div>
+<div class="row" ng-if="analysisTemplate == null">
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg" ng-click="previousStep()">
+			<i class="fa fa-arrow-left">&nbsp;Previous Step: {{previousStepTitle(3)}}</i>
+		</a>	
+	</div>
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg pull-right" ng-click="nextStep()">
+			Next Step: {{nextStepTitle(3)}}&nbsp;<i class="fa fa-arrow-right"></i>
+		</a>
+	</div>
+</div>	
+

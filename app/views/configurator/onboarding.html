@@ -1,0 +1,98 @@
+<div class="row">
+	<div class="col-md-12 bs-callout bs-callout-info">
+  		<!--<alert type="info" ng-init="hideAlert = false" close="hideAlert = true" ng-hide="hideAlert"></alert>-->
+  		<span class="tip-show-hide" ng-hide="collapse">  
+  		Tell us where the event data is being stored, the format of the data and the frequency of logging data (daily, weekly, monthly).  We will load some sample data and infer schema to get you started with the next step.
+  		</span>
+  		<a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>
+
+  	</div>
+</div>
+<div class="row">
+	<div class="col-md-3"><h3>Identify data location</h3></div>
+	<div class="col-md-3">
+		<!--<select class="form-control" ng-change="getFunnel()" ng-model="funnelId" ng-options="funnel.funnel_id as funnel.name for funnel in funnels"></select>				 	-->
+		 <ui-select ng-model="datasource.selected" theme="select2" search-enabled="false" ng-disabled="disabled" style="min-width: 150px; max-width: 150px;">
+		    <ui-select-match placeholder="Select location">
+		    	{{$select.selected.name}}
+		    </ui-select-match>
+		    <ui-select-choices repeat="ds in supportedDatasources | filter: {name: $select.search}">
+		      <div ng-bind-html="ds.name | highlight: $select.search"></div>
+		    </ui-select-choices>
+		  </ui-select>   		
+	</div>
+</div>
+<div class="row" ng-show="ds.name=='S3'">
+	<div class="col-md-12">
+		<div class="row">&nbsp;</div>
+		<div class="row">
+			<div class="col-md-3"><h3>Bucket URL</h3></div>
+			<div class="col-md-9"><input type="text" name="input" ng-model="ds.bucketURL" required placeholder="s3://yahoo-photos-event-logs/" ng-model-options="{updateOn: 'blur'}" ng-disabled="fetchingSample">
+			</div>
+		</div>
+		<div class="row">&nbsp;</div>
+		<div class="row">
+			<div class="col-md-3"><h3>AWS Access Key ID</h3></div>
+			<div class="col-md-9"><input type="text" name="input" ng-model="ds.accessKeyId" required ng-disabled="fetchingSample">
+			</div>
+		</div>
+		<div class="row">&nbsp;</div>
+		<div class="row">
+			<div class="col-md-3"><h3>AWS Secret Access Key</h3></div>
+			<div class="col-md-9"><input type="text" name="input" ng-model="ds.secretAccessKey" required ng-disabled="fetchingSample">
+			</div>
+		</div>
+		<div class="row" ng-hide="sampleDataAsString">&nbsp;</div>
+		<div class="row" ng-hide="sampleDataAsString">
+			<div class="col-md-12">
+				<a class="btn btn-default btn-lg pul" ng-click="fetchSampleData()">
+					<i class="fa" ng-class="{'fa-download': !fetchingSample, 'fa-cogs fa-spin': fetchingSample}"></i> {{fetchingSampleText}}
+				</a>
+				<a ng-show="fetchingSample" ng-click="cancelFetchingSampleData()">Cancel</a>
+			</div>	
+		</div>	
+		<div class="row bs-callout bs-callout-info" ng-show="sampleDataAsString != null">
+			<div class="col-md-4">
+				<div class="row">&nbsp;</div>
+				<div class="row">
+					<strong>Sample file read:</strong>{{sampleDataFromS3.sample_file_name}}
+				</div>
+				<div class="row">&nbsp;</div>
+				<div class="row">
+					<strong>Top level folder:</strong>{{sampleDataFromS3.folder_name}}
+				</div>
+				<div class="row">&nbsp;</div>
+				<div class="row">
+					<strong>Size of the bucket:</strong>{{sampleDataFromS3.size_of_bucket}}
+				</div>
+				<div class="row">&nbsp;</div>
+				<div class="row">Format:
+				    <div class="btn-group">
+				        <label class="btn btn-default" ng-model="dataType" btn-radio="'JSON'">JSON</label>
+				        <label class="btn btn-default" ng-model="dataType" btn-radio="'CSV'">CSV</label>
+				        <label class="btn btn-default" ng-model="dataType" btn-radio="'Other'">Other</label>
+				    </div>	
+				</div>
+				<div class="row">&nbsp;</div>
+				<div class="row">Frequency:
+				    <div class="btn-group">
+				        <label class="btn btn-default" ng-model="dataFrequency" btn-radio="'Daily'">Daily</label>
+				        <label class="btn btn-default" ng-model="dataFrequency" btn-radio="'Weekly'">Weekly</label>
+				        <label class="btn btn-default" ng-model="dataFrequency" btn-radio="'Monthly'">Monthly</label>
+				    </div>	
+				</div>												
+			</div>
+			<div class="col-md-8">
+				<textarea ng-model="sampleDataAsString" cols="75" rows="15"></textarea>
+			</div>			
+		</div>							
+	</div>
+</div>
+<div class="row" ng-show="dataType != null">
+	<div class="col-md-12">
+		<a class="btn btn-default btn-lg pull-right" ng-click="nextStep()">
+			Next Step: {{steps[step+1].title}}&nbsp;<i class="fa fa-arrow-right"></i>
+		</a>
+	</div>
+</div>	
+

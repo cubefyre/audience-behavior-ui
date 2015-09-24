@@ -1,0 +1,121 @@
+#connect to mongo
+mongo 127.0.0.1:19981/mp_data
+
+#import data
+$ mongoimport --port 19981 -d mp_data -c event_logs data/events_raw_data.json 
+
+# change db
+use mp_data
+
+# show all colelctions
+show collections
+
+# insert a new field
+db.event_logs.update({},
+                          {$set : {"properties.new_field":1}},
+                          {upsert:false,
+                          multi:true})
+
+#drop all collections
+db.dropDatabase()
+
+# drop a collection
+db.event_logs.drop()
+
+# get all enteries from a colleciton
+db.event_logs.find({})
+
+# get length of a collection
+db.event_logs.find().length()
+
+# Remove all logs for event "company page"
+event_logs.remove({"event": "company page"})
+
+# find all events "landing page"
+db.event_logs.find({"event": "landing page"}).length()
+
+# multiple events
+db.event_logs.find({event:{$in:['landing page', 'request demo page' ]}})
+
+# find all events "landing_page" for the last 30 days
+db.event_logs.find({"event": "landing page", "properties.time": {$lt: 1424235596}}).length()
+
+# last thirty days
+db.event_logs.find({"event": "landing page", "properties.time": {$lt: 1421616618}}).length()
+
+#last seven days
+db.event_logs.find({event:{$in:['landing page', 'request demo page' ]}, "properties.time": {$lt: 1423604331}}).length()
+
+# db agreegate by event type
+db.event_logs.aggregate({ "$group" : { "_id" : "$event",  "count" : { "$sum" : 1 }}})
+
+{ "_id" : "thankyou", "count" : 25 }
+{ "_id" : "careers page", "count" : 1174 }
+{ "_id" : "request demo page", "count" : 339 }
+{ "_id" : "landing page", "count" : 3693 }
+
+# aggregate by date
+db.event_logs.aggregate({ "$group" : {_id : { month: { $month: "$properties.event_date" }, day: { $dayOfMonth: "$properties.event_date" }, year: { $year: "$properties.event_date" }}, "count" : { "$sum" : 1 }}})
+
+{ "_id" : { "month" : 1, "day" : 16, "year" : 2015 }, "count" : 69 }
+{ "_id" : { "month" : 12, "day" : 13, "year" : 2014 }, "count" : 36 }
+{ "_id" : { "month" : 1, "day" : 26, "year" : 2015 }, "count" : 63 }
+{ "_id" : { "month" : 1, "day" : 14, "year" : 2015 }, "count" : 51 }
+
+# aggregate by event and date
+db.event_logs.aggregate({ "$group" : {_id : { event: "$event", month: { $month: "$properties.event_date" }, day: { $dayOfMonth: "$properties.event_date" }, year: { $year: "$properties.event_date" }}, "count" : { "$sum" : 1 }}})
+
+{ "_id" : { "event" : "thankyou", "month" : 2, "day" : 15, "year" : 2015 }, "count" : 1 }
+{ "_id" : { "event" : "request demo page", "month" : 2, "day" : 14, "year" : 2015 }, "count" : 3 }
+{ "_id" : { "event" : "careers page", "month" : 2, "day" : 13, "year" : 2015 }, "count" : 10 }
+{ "_id" : { "event" : "careers page", "month" : 2, "day" : 12, "year" : 2015 }, "count" : 11 }
+
+
+### match - for month of dec and sort by count
+db.event_logs.aggregate([{
+    	"$match": {"properties.event_date": {$gte: new Date(2014, 11, 1), $lt: new Date(2014, 11, 31)}}
+  	}, 
+  	{"$group" : {_id : { event: "$event", month: { $month: "$properties.event_date" }, day: { $dayOfMonth: "$properties.event_date" }, year: { $year: "$properties.event_date" }}, "count" : { "$sum" : 1 }}},
+  	{ $sort: {count: -1}}])
+
+{ "_id" : { "event" : "landing page", "month" : 12, "day" : 1, "year" : 2014 }, "count" : 76 }
+{ "_id" : { "event" : "landing page", "month" : 12, "day" : 16, "year" : 2014 }, "count" : 75 }
+{ "_id" : { "event" : "landing page", "month" : 12, "day" : 5, "year" : 2014 }, "count" : 72 }
+{ "_id" : { "event" : "landing page", "month" : 12, "day" : 2, "year" : 2014 }, "count" : 61 }
+{ "_id" : { "event" : "landing page", "month" : 12, "day" : 19, "year" : 2014 }, "count" : 60 }
+
+
+### match - for month of dec, create project and sort by count
+
+db.event_logs.aggregate([{
+    	"$match": {"properties.event_date": {$gte: new Date(2014, 11, 1), $lt: new Date(2014, 11, 31)}}
+  	},
+  	{$project: { _id: 0, dom: {$dayOfMonth: "$properties.event_date"}}},  	
+  	{"$group" : {_id : { event: "$event", day:"$dom"}, "count" : { "$sum" : 1 }}},
+  	{ $sort: {count: -1}}])
+
+{ "_id" : { "day" : 1 }, "count" : 112 }
+{ "_id" : { "day" : 16 }, "count" : 99 }
+{ "_id" : { "day" : 2 }, "count" : 93 }
+{ "_id" : { "day" : 5 }, "count" : 90 }
+
+#
+https://rubayeet.wordpress.com/2013/12/29/web-analytics-using-mongodb-aggregation-framework/
+
+# get distinct value of a key
+db.event_logs.distinct("properties.$browser")
+
+
+###########
+
+## map reduce function
+mr = db.runCommand({
+  "mapreduce" : "event_logs",
+  "map" : function() {
+    for (var key in this) { emit(key, null); }
+  },
+  "reduce" : function(key, stuff) { return null; }, 
+  "out": "event_logs" + "_keys"
+})
+# run the above command
+db[mr.result].distinct("_id")

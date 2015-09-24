@@ -1,0 +1,36 @@
+<div class="container sl-app-container sl-configurator">
+  <div class="row sl-steps">
+    <div class="col-md-2 sl-step" ng-repeat="step in steps" ng-class="{'col-md-offset-1': $index == 0, 'disabled': onStep < $index, 'complete': onStep > $index, 'active': onStep == $index}">
+        <div class="progress sl-progress">
+            <div class="progress-bar"></div>
+        </div>
+        <a class="sl-step-icon" ng-click=""><i class="fa fa-2x" ng-class="step.icon"></i></a>
+        <div class="sl-step-title text-center">{{step.title}}</div>
+    </div>
+  </div>
+  <div class="row" ng-if="onStep==0">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-include="'views/configurator/onboarding.html'"></div>
+    </div>
+  </div>
+  <div class="row" ng-if="onStep==1">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-include="'views/configurator/mapping.html'"></div>
+    </div>  
+  </div>  
+  <div class="row" ng-if="onStep==2">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-include="'views/configurator/defining.html'"></div>
+    </div> 
+  </div>  
+  <div class="row" ng-if="onStep==3">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-include="'views/configurator/designing.html'"></div>
+    </div>
+  </div>  
+  <div class="row" ng-if="onStep==4">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-include="'views/configurator/sizing.html'"></div>
+    </div>
+  </div>
+</div> <!-- end of container -->

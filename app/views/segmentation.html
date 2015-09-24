@@ -1,0 +1,171 @@
+<div class="container sl-app-container">
+  <div class="row  bs-callout bs-callout-info">
+    <!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+    <div class="col-md-12"> 
+        <span class="tip-show-hide" ng-hide="collapse"> 
+        To create a new segment, pick an event and get then select properties or select one from the predefined ones to get started.   
+      </span>
+      <a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>        
+        </div>       
+  </div>    
+  <div class="row">
+    <div class="col-md-9">      
+      <div class="row">
+        <div class="col-md-12 sl-box" ng-mouseenter="showToolbar = true" ng-mouseleave="showToolbar = false">
+          <div class="row sl-box-header sl-box-header-padding">
+            <div class="col-md-6">        
+              <div class="inline" ng-dropdown-multiselect="" options="events" selected-model="selectedEvent" 
+              extra-settings="eventsSettings" translation-texts="eventsText"></div>  
+              <span popover-placement="right" popover=" To create a new segment, pick an event and get then select properties. Select a segment from the dropdownlist" popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+                <i class="fa fa-question-circle"></i>
+              </span>             
+            </div>        
+            <!-- toolbar for segment-->
+            <div class="col-md-3 col-md-offset-3">  
+              <div class="btn-group btn-group-sm pull-right" role="group">
+                          
+                <button id="saveSegmentTarget" class="btn btn-default" ng-init="saving = false" popover-template="templateUrl" popover-trigger="show" ng-disabled="!eventSelected" ng-click="toggleSegmentPopover()"><i class="fa fa-save"></i></button>  
+
+                <button class="btn btn-default"  tooltip-placement="top" tooltip="Reset" ng-click="resetSegment()" ng-disabled="!eventSelected" ng-init="eventSelected = false"><i class="fa fa-circle-o-notch"></i></button> 
+                <button class="btn btn-default"  tooltip-placement="top" tooltip="Add New" ng-click="addNewSegment()" ng-disabled="!eventSelected" ng-init="eventSelected = false"><i class="fa fa-plus"></i></button>              
+              </div>                
+            </div>
+          </div>
+          <!-- segment section-->
+          <div class="row sl-box-content">
+            <div class="col-md-12 sl-segment-panel">      
+              <div class="row" ng-repeat="step in segmentSteps track by $index"> 
+                <div class="col-md-1">
+                  <h2><span class="label label-default" ng-show="showLabelHere($index)">By</span></h2>
+                </div>
+                <div class="col-md-3">
+                  <select class="form-control" ng-model="segmentSteps[$index].prop" ng-options="prop as prop.dim_label for prop in props" ng-change="applyGroupbyCondition($index)">
+                    <option style="display:none" value="">Select Property</option>
+                  </select>            
+                </div>              
+                <div class="col-md-3">
+                  <select class="form-control" ng-model="segmentSteps[$index].operator" ng-options="op.op_value as op.op_label for op in segmentSteps[$index].prop.dim_operators"
+                  ng-change="applyFilterCondition($index)" ng-show="segmentSteps[$index].isSelected">
+                    <option style="display:none" value="">Select Operator</option> 
+                  </select> 
+                </div>      
+                <div class="col-md-4">
+                  <select class="form-control" 
+                  ng-model="segmentSteps[$index].value" ng-options="value for value in segmentSteps[$index].prop.dim_val" ng-change="applyFilterCondition($index)" ng-show="segmentSteps[$index].isSelected">
+                    <option style="display:none" value="">Select Value</option> 
+                  </select> 
+                  </div>                         
+                <div class="col-md-1">
+                  <button class="btn btn-default btn-sm pull-right" ng-click="removeSegmentProperty($index)"><i class="fa fa-close"></i></button>              
+                </div>
+
+              </div>            
+              <div class="row">
+                <div class="col-md-6">
+                  <a class="btn btn-default btn-lg" ng-click="addNewSegmentProperty()" ng-disabled="!eventSelected">
+                    <i class="fa fa-plus-circle"></i> Add Segment
+                  </a>          
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>
+      <!-- event chart box -->
+      <div class="row">
+        <div class="col-md-12 sl-box" ng-mouseenter="showToolbar = true" ng-mouseleave="showToolbar = false">
+          <!-- header row -->
+          <div class="row sl-box-header sl-box-header-padding">        
+            <div class="col-md-9">  
+                <div class="input-group date-range-picker" style="min-width:'50px';">
+              <span class="input-group-addon" id="date-range-picker">
+                <i class="fa fa-calendar"></i>
+              </span>
+              <input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" 
+                ng-model="dateRange" min="eventDateRange.minDate" max="eventDateRange.maxDate" options="datePickerOpts"/>
+              </div>  
+            </div>          
+            <div class="col-md-3">
+              <div class="btn-group pull-right" role="group">
+                <div class="btn-group" dropdown>
+                  <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled" style="min-width: 80px;">
+                  {{eventDataType}} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-narrow" role="menu">
+                    <li ng-repeat="eventDataType in eventDataTypes">
+                      <a href="" ng-click="setEventDataType(eventDataType)">{{eventDataType}}</a>
+                    </li>
+                  </ul>
+                </div>  
+                <div class="btn-group" dropdown>
+                  <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled" style="min-width: 80px;">
+                  {{unit}} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-narrow" role="menu">
+                    <li ng-repeat="unit in units">
+                      <a href="" ng-click="setUnit(unit)">{{unit}}</a>
+                    </li>
+                  </ul>
+                </div>  
+              </div>         
+            </div>
+          </div>
+          <!-- toolbar -->
+          <div class="row sl-box-toolbar">
+            <div class="col-md-2">&nbsp;</div>
+            <div class="col-md-10">
+              <div class="btn-group btn-group-sm pull-right" ng-init="showToolbar = false" role="group" ng-show="showToolbar">
+                <button ng-repeat="(name, type) in chartTypes" class="btn btn-default" ng-click="swapChartType(type)">
+                          <i class="fa fa-{{name}}-chart"></i></button>
+                </button>            
+              </div>      
+            </div>        
+          </div>        
+          <!-- chart or table-->
+          <div class="row sl-box-content">
+            <div class="col-md-12" ng-show="!showTable">
+                <highchart id="trends-chart" config="segmentChartConfig"></highchart>
+            </div>
+          </div>    
+        </div>
+      </div>  
+    </div>    
+    <!-- segment section -->   
+    <div class="col-md-3 sl-box">
+      <!-- box header -->
+      <div class="row sl-box-header sl-box-header-padding">
+        <div class="col-md-8">
+          Saved Segments
+        <span popover-placement="right" popover="This graph shows the conversion trend over a period." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+                <i class="fa fa-question-circle"></i>
+              </span>    
+        </div>          
+      </div>
+      <!-- saved segments -->
+      <div class="row sl-box-content sl-box-segment">
+        <div class="row sl-entity" ng-repeat="(id, segment) in savedSegments" ng-mouseenter="showSegmentToolbar = true" ng-mouseleave="showSegmentToolbar = false">
+          <div class="col-md-8">
+            <h5>{{segment.title}}</h5>
+          </div>
+          <div class="col-md-4">
+            <div class="btn-group btn-group-xs pull-right" role="group" ng-show="showSegmentToolbar">
+              <button class="btn btn-default btn-xs" ng-click="loadSegment(id)"><i class="fa fa-check"></i></button>       
+              <button class="btn btn-default btn-xs" ng-click="removeSegment(id)"><i class="fa fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>       
+    </div>
+  </div>
+</div> <!-- end of container -->
+
+
+
+<div class="modal" ng-show="loadingView">
+  <!-- loadingView is a variable defined in the $rootScope -->
+
+  <!-- The loading animation is inspired by http://codepen.io/joni/details/FiKsd -->
+  <ul id="loading">
+    <li class="bar" ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]"></li>
+  </ul>
+</div>

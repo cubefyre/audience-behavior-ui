@@ -1,0 +1,338 @@
+<div class="container sl-app-container">
+  <div class="row  bs-callout bs-callout-info">
+    <!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+    <div class="col-md-6"> 
+      My Dashboard <span popover-placement="right" popover="Track key metrics and analysis on this dashboard. You can pin any screen you like here." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope"><i class="fa fa-question-circle"></i></span>          
+    </div>
+    <!--<div class="col-md-3 sl-section-header sl-box-header-padding border-right">-->
+    <div class="col-md-3">  
+      <div class="input-group date-range-picker pull-right" style="min-width:'50px';">
+        <span class="input-group-addon" id="date-range-picker">
+          <i class="fa fa-calendar"></i>
+        </span>
+        <input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" 
+          ng-model="dateRange" min="eventDateRange.minDate" max="eventDateRange.maxDate" options="datePickerOpts"/>
+      </div>  
+    </div>  
+    <div class="col-md-3">  
+      <!-- segment toolbar -->
+      <div class="btn-group pull-right" role="group">
+        <button type="button" class="btn btn-default" ng-click="configureEmail()"><i class="fa fa-envelope-o"></i></button>
+        <button type="button" class="btn btn-default" ng-click="printDB()"><i class="fa fa-print"></i></button>         
+      </div> 
+    </div>            
+  </div> 
+  <div class="row">
+    <div class="col-md-4">
+        <div class="row sl-box" ng-mouseenter="showC1Toolbar = true" ng-mouseleave="showC1Toolbar = false">
+            <div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+                <div class="col-md-12">
+                    <a href="#/trend?t=0">Users (New vs Existing)</a>
+                </div>          
+            </div>
+            <!-- toolbar -->
+            <div class="row sl-box-toolbar">
+                <div class="col-md-2">&nbsp;</div>
+                <div class="col-md-10">
+                    <div class="btn-group btn-group-sm pull-right" ng-init="showC1Toolbar = false" role="group" ng-show="showC1Toolbar">                        
+                        <button class="btn btn-default"  tooltip-placement="top" tooltip="Remove from dashboard"><i class="fa fa-remove"></i></button>   
+                    </div>          
+                </div>              
+            </div>
+                <!-- chart or table-->
+            <div class="row sl-box-content">
+                <div class="col-md-12" ng-show="!showTable">
+                    <highchart id="users-trend-chart" config="usersTrendCCO"></highchart>
+                </div>
+            </div>      
+        </div>          
+    </div>
+    <div class="col-md-4">
+        <div class="row sl-box" ng-mouseenter="showC2Toolbar = true" ng-mouseleave="showC2Toolbar = false">
+            <div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+                <div class="col-md-12">
+                    <a href="#/trend?t=0">Events</a>
+                </div>          
+            </div>
+            <!-- toolbar -->
+            <div class="row sl-box-toolbar">
+                <div class="col-md-2">&nbsp;</div>
+                <div class="col-md-10">
+                    <div class="btn-group btn-group-sm pull-right" ng-init="showC2Toolbar = false" role="group" ng-show="showC2Toolbar">                        
+                        <button class="btn btn-default"  tooltip-placement="top" tooltip="Remove from dashboard"><i class="fa fa-remove"></i></button>   
+                    </div>          
+                </div>              
+            </div>
+                <!-- chart or table-->
+            <div class="row sl-box-content">
+                <div class="col-md-12">
+                    <highchart id="events-trend-chart" config="eventTrendsCCO"></highchart>
+                </div>
+            </div>      
+        </div>          
+    </div>
+    <div class="col-md-4">
+        <div class="row sl-box" ng-mouseenter="showC3Toolbar = true" ng-mouseleave="showC3Toolbar = false">
+            <div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+                <div class="col-md-12">
+                    <a href="#/impact">Sessions To Goal</a>
+                </div>          
+            </div>
+            <!-- toolbar -->
+            <div class="row sl-box-toolbar">
+                <div class="col-md-2">&nbsp;</div>
+                <div class="col-md-10">
+                    <div class="btn-group btn-group-sm pull-right" ng-init="showC3Toolbar = false" role="group" ng-show="showC3Toolbar">                        
+                        <button class="btn btn-default"  tooltip-placement="top" tooltip="Remove from dashboard"><i class="fa fa-remove"></i></button>   
+                    </div>          
+                </div>              
+            </div>
+                <!-- chart or table-->
+            <div class="row sl-box-content">
+                <div class="col-md-12" >
+                    <highchart id="stg-trend-chart" config="stgCCO"></highchart>
+                </div>
+            </div>      
+        </div>          
+    </div>    
+  </div> 
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-md-4 tile" ng-repeat="metric in keyMetrics">
+            <span class="value">{{metric.value | number}}</span>
+            <span class="title">{{metric.label}}</span>
+            <a href="#/trend?t=0" class="more" ng-class="{'blue': metric.trend >= 0, 'red': metric.trend < 0}">
+                <i class="fa" ng-class="{'fa-arrow-up': metric.trend >= 0, 'fa-arrow-down': metric.trend < 0}"></i>
+                <span>{{metric.trend}}% since last week</span>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row sl-box" ng-mouseenter="showC4Toolbar = true" ng-mouseleave="showC4Toolbar = false">
+                <div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+                    <div class="col-md-12">
+                        <a href="#/impact">Impact Events Influence on Goal</a>
+                    </div>          
+                </div>
+                <!-- toolbar -->
+                <div class="row sl-box-toolbar">
+                    <div class="col-md-2">&nbsp;</div>
+                    <div class="col-md-10">
+                        <div class="btn-group btn-group-sm pull-right" ng-init="showC4Toolbar = false" role="group" ng-show="showC4Toolbar">                        
+                            <button class="btn btn-default"  tooltip-placement="top" tooltip="Remove from dashboard"><i class="fa fa-remove"></i></button>   
+                        </div>          
+                    </div>              
+                </div>
+                    <!-- chart or table-->
+                <div class="row sl-box-content">
+                    <div class="col-md-12" ng-show="!showTable">
+                        <highchart id="sdtg-trend-chart" config="doiptgCCO"></highchart>
+                    </div>
+                </div>      
+            </div>          
+        </div>
+        <div class="col-md-4">
+            <div class="row sl-box" ng-mouseenter="showC5Toolbar = true" ng-mouseleave="showC5Toolbar = false">
+                <div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+                    <div class="col-md-12">
+                        <a href="#/cohort">Retention</a>
+                    </div>          
+                </div>
+                <!-- toolbar -->
+                <div class="row sl-box-toolbar">
+                    <div class="col-md-2">&nbsp;</div>
+                    <div class="col-md-10">
+                        <div class="btn-group btn-group-sm pull-right" ng-init="showC5Toolbar = false" role="group" ng-show="showC5Toolbar">                        
+                            <button class="btn btn-default"  tooltip-placement="top" tooltip="Remove from dashboard"><i class="fa fa-remove"></i></button>   
+                        </div>          
+                    </div>              
+                </div>
+                    <!-- chart or table-->
+                <div class="row sl-box-content">
+                    <div class="col-md-12">
+                        <highchart id="events-trend-chart" config="retentionCCO"></highchart>
+                    </div>
+                </div>      
+            </div>          
+        </div>
+        <div class="col-md-4">
+            <div class="row sl-box" ng-mouseenter="showC6Toolbar = true" ng-mouseleave="showC6Toolbar = false">
+                <div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+                    <div class="col-md-12">
+                        <a href="#/attribution">Channel Attribution</a>
+                    </div>          
+                </div>
+                <!-- toolbar -->
+                <div class="row sl-box-toolbar">
+                    <div class="col-md-2">&nbsp;</div>
+                    <div class="col-md-10">
+                        <div class="btn-group btn-group-sm pull-right" ng-init="showC6Toolbar = false" role="group" ng-show="showC6Toolbar">                        
+                            <button class="btn btn-default"  tooltip-placement="top" tooltip="Remove from dashboard"><i class="fa fa-remove"></i></button>   
+                        </div>          
+                    </div>              
+                </div>
+                    <!-- chart or table-->
+                <div class="row sl-box-content">
+                    <div class="col-md-12" >
+                        <highchart id="stg-trend-chart" config="wmAttriCCO"></highchart>
+                    </div>
+                </div>      
+            </div>          
+        </div>    
+    </div> 
+<div class="row">&nbsp;</div>
+<div class="row">&nbsp;</div>
+
+</div> <!-- end of container -->
+
+
+
+  <!--<div class="row">
+    <video autoplay loop poster="images/polina.jpg" id="bgvid">
+        <source src="videos/waves.webm" type="video/webm">
+        <source src="videos/surf.mp4" type="video/mp4">
+    </video>
+  </div>--> 
+<!--
+  <div class="row">
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-bullseye tile-icon blue"></i>
+            <span class="value">{{dashboard.goals}}</span>
+            <span class="title">goals tracked</span>
+            <a href="#/goal" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-random tile-icon red"></i>
+            <span class="value">{{dashboard.paths}}</span>
+            <span class="title">paths trending</span>
+            <a href="#/path" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div> 
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-bolt tile-icon green"></i>
+            <span class="value">{{dashboard.events}}</span>
+            <span class="title">events outperforming</span>
+            <a href="#/goal" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-paper-plane-o tile-icon teal"></i>
+            <span class="value">{{dashboard.campaigns}}</span>
+            <span class="title">campaigns performing</span>
+            <a href="#/trend" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>      
+  </div>  
+  <div class="row">&nbsp;</div>  
+  <div class="row">
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-paw tile-icon blue"></i>
+            <span class="value">{{dashboard.pageviews | number}}</span>
+            <span class="title">pageviews today</span>
+            <a href="#/trend" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-user tile-icon red"></i>
+            <span class="value">{{dashboard.uvisitors  | number}}</span>
+            <span class="title">unique users visited</span>
+            <a href="#/trend" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div> 
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-spinner tile-icon green"></i>
+            <span class="value">{{dashboard.sessionDuration  | number:1}}</span>
+            <span class="title">Seconds Avg. Session</span>
+            <a href="#/trend" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-line-chart tile-icon teal"></i>
+            <span class="value">{{dashboard.bounceRate | number:1}}</span>
+            <span class="title">bounce rate</span>
+            <a href="#/funnels" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>      
+  </div>
+  <div class="row">&nbsp;</div>  
+  <div class="row">
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-filter tile-icon blue"></i>
+            <span class="value">7</span>
+            <span class="title">funnels</span>
+            <a href="#/funnels" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-share-alt tile-icon red"></i>
+            <span class="value">21</span>
+            <span class="title">segments</span>
+            <a href="#/segmentation" class="more light-gray">   
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div> 
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-group tile-icon green"></i>
+            <span class="value">2</span>
+            <span class="title">cohorts tracking well</span>
+            <a href="#/cohort" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="tile">
+            <i class="fa fa-shopping-cart tile-icon teal"></i>
+            <span class="value">{{dashboard.payingUsers  | number}}</span>
+            <span class="title">paid users today</span>
+            <a href="#/trend" class="more light-gray">
+                <span>View More</span>
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>      
+  </div> 
+  -->

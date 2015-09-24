@@ -1,0 +1,146 @@
+<div class="container sl-app-container">
+	<div class="row  bs-callout bs-callout-info">
+		<!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+		<div class="col-md-9"> 
+			Top Campaigns for Attribution Event:&nbsp;&nbsp;&nbsp;
+		    <!-- goal event list -->	
+            <div class="inline" ng-dropdown-multiselect="" options="goalEventsList" selected-model="selectedGoalEvent" 
+            extra-settings="goalEventsSettings" translation-texts="goalEventsText"></div> 
+			<!-- segment toolbar -->
+			<div class="btn-group pull-right" role="group">
+				<button type="button" class="btn btn-default" ng-click="segmentGeo()">Geo</button>
+				<button type="button" class="btn btn-default" ng-click="prepareNewFunnel()">Device</button>				  
+				<button type="button" class="btn btn-default" ng-click="prepareNewFunnel()">Campaign</button>	
+			</div> 		           
+        </div>
+	    <!--<div class="col-md-3 sl-section-header sl-box-header-padding border-right">-->
+	    <div class="col-md-3">	
+    	    <div class="input-group date-range-picker pull-right" style="min-width:'50px';">
+				<span class="input-group-addon" id="date-range-picker">
+					<i class="fa fa-calendar"></i>
+				</span>
+				<input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" 
+    			ng-model="dateRange" min="eventDateRange.minDate" max="eventDateRange.maxDate" options="datePickerOpts"/>
+    		</div>	
+    	</div>	        
+	</div>
+	<!-- First row of charts -->
+	<div class="row">
+		<div class="col-md-12 sl-box" ng-mouseenter="showToolbarC1 = true" ng-mouseleave="showToolbarC1 = false">
+			<!-- box header -->
+  			<div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+			   	<div class="col-md-12">
+			   		Weighted Model
+					<span popover-placement="right" popover="This graph shows the conversion rate at each step of the funnel you defined. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	            	</span>			   
+			    </div>			   	
+			</div>
+			<!-- chart toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-9">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showToolbarC1 = false" role="group" ng-show="showToolbarC1">
+						<!-- show table-->
+						<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-bar-chart': showTable}"></i></button>	
+						<!-- export data -->
+						<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<!-- pin to dashboard-->				
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>	
+				<div class="col-md-3">&nbsp;
+				</div>			
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-9">
+	  					<highchart id="a-wm-chart" config="wmAttriCCO"></highchart>
+				</div>
+				<div class="col-md-3">	
+					<div class="row">
+			    		<div class="col-md-12 text-center">
+							<strong><u>Interaction Weights</u></strong>
+						</div>
+					</div>
+					<div class="row">
+			    		<div class="col-md-10 text-center">
+			    			<span> First: {{interactionWeights.first.weight}}%</span>
+			    			<input type="range" min="0" max="interactionWeights.first.max" ng-model="interactionWeights.first.weight" style="margin-left: 50px;" ng-mouseup="adjustWeights()"/>
+			    		</div>
+			    	</div>
+					<div class="row">
+			    		<div class="col-md-12 text-center">
+			    			<span> Middle: {{interactionWeights.middle.weight}}%</span>
+			    			<input type="range" min="0" max="100" ng-model="interactionWeights.middle.weight" style="margin-left: 50px;"/>
+			    		</div>
+			    	</div>	 
+					<div class="row">
+			    		<div class="col-md-12 text-center">
+			    			<span> Last: {{interactionWeights.last.weight}}%</span>
+			    			<input type="range" min="0" max="100" ng-model="interactionWeights.last.weight" style="margin-left: 50px;"/>
+			    		</div>
+			    	</div>	  
+					<div class="row">
+			    		<div class="col-md-12 text-center" >
+							<h3 ng-class="{'text-red': totalWeights != 100}">Total Weights: {{totalWeights}}</h3>
+						</div>
+					</div>  	   	
+				</div>					
+			</div> 		
+		</div>
+		<!--<div class="col-md-2">&nbsp;</div>-->	
+	</div>
+	<!-- Second row of charts -->
+	<div class="row">
+		<div class="col-md-12 sl-box" ng-mouseenter="showToolbarC2 = true" ng-mouseleave="showToolbarC2 = false">
+			<!-- box header -->
+  			<div class="row sl-box-header sl-box-header-padding sl-box-header-skinny">
+			   	<div class="col-md-12">
+			   		Time Decay Model
+					<span popover-placement="right" popover="This graph shows the conversion rate at each step of the funnel you defined. The final conversion rate is shown at the top. To see specific users and their event timelines from any step in the funnel, click on the section of the funnel you’re interested in." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	            	</span>			   
+			    </div>			   	
+			</div>
+			<!-- chart toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-9">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showToolbarC2 = false" role="group" ng-show="showToolbarC2">
+						<!-- show table-->
+						<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-bar-chart': showTable}"></i></button>	
+						<!-- export data -->
+						<button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<!-- pin to dashboard-->				
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>		
+				<div class="col-md-3">&nbsp;
+				</div>						
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-9">
+	  					<highchart id="a-wm-chart" config="tdAttriCCO"></highchart>
+				</div>
+				<div class="col-md-3">	
+					<div class="row">
+			    		<div class="col-md-12 text-center">
+							<strong><u>Decay Factor (Half-life)</u></strong>
+						</div>
+					</div>
+					<div class="row">&nbsp;</div>
+					<div class="row">
+			    		<div class="col-md-10 text-center">
+			    			<span> Decay: {{timeDecay}} days</span>
+			    			<input type="range" min="0" max="60" ng-model="timeDecay" style="margin-left: 50px;" ng-mouseup="apllyTimeDecay()"/>
+			    		</div>
+			    	</div>
+				</div>	
+			</div> 	
+
+		</div>
+		<!--<div class="col-md-2">&nbsp;</div>-->
+		<!--<div class="col-md-2">&nbsp;</div>-->
+			
+	</div>	
+</div> <!-- end of container -->

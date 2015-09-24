@@ -1,0 +1,147 @@
+<div class="container sl-app-container">
+  <!--<div class="row  bs-callout bs-callout-info">
+    <div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+    <!--<div class="col-md-12"> 
+        <span class="tip-show-hide" ng-hide="collapse">         
+        This view shows a detailed breakdown of retention by each user cohort and by day. 
+      </span>
+      <a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>        
+    </div>       
+  </div> -->
+  <div class="row  bs-callout bs-callout-info">
+    <!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+    <div class="col-md-6"> 
+      Retention <span popover-placement="right" popover="This bar graph shows retention by averaging all of the Nth day retention values from the user cohorts within the selected timeframe. By default, the graph will show the retention of new users who returned and performed any event. You can also select any 'birth action’ and ‘returning action’ to look at retention for a specific combination of actions." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope"><i class="fa fa-question-circle"></i></span> of users who returned and performed an event over a time period. Change time-period or apply segments to get finer view of the cohorts.              
+    </div>
+    <div class="col-md-3">  
+      <!-- segment toolbar -->
+      <div class="btn-group pull-right" role="group">
+        <button type="button" class="btn btn-default" ng-click="segmentGeo()">Geo</button>
+        <button type="button" class="btn btn-default" ng-click="prepareNewFunnel()">Device</button>         
+        <button type="button" class="btn btn-default" ng-click="prepareNewFunnel()">Campaign</button> 
+      </div> 
+    </div>
+    <!--<div class="col-md-3 sl-section-header sl-box-header-padding border-right">-->
+    <div class="col-md-3">  
+      <div class="input-group date-range-picker pull-right" style="min-width:'50px';">
+        <span class="input-group-addon" id="date-range-picker">
+          <i class="fa fa-calendar"></i>
+        </span>
+        <input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" 
+          ng-model="dateRange" min="eventDateRange.minDate" max="eventDateRange.maxDate" options="datePickerOpts"/>
+      </div>  
+    </div>          
+  </div>  
+
+   <!-- Cohort data -->
+  <div class="row">
+    <div class="col-md-9">
+      <div class="row">     
+        <div class="col-md-12 sl-box" ng-mouseenter="showToolbar = true" ng-mouseleave="showToolbar = false">
+          <!-- box header -->
+          <div class="row sl-box-header sl-box-header-padding">
+            <div class="col-md-11">
+              <!-- birth event list -->  
+              <span> Users who performed this &nbsp;</span>
+              <div class="inline" ng-dropdown-multiselect="" options="eventList" selected-model="selectedBirthEvent" extra-settings="eventListSettings" translation-texts="selectBirthEventText"
+              ></div>
+              <span>&nbsp;&nbsp;&nbsp;and then returned to performed this&nbsp;</span>
+              <!-- return event list -->  
+              <div class="inline" ng-dropdown-multiselect="" options="eventListWithAny" selected-model="selectedReturnEvent" extra-settings="eventListSettings" translation-texts="selectReturnEventText"
+              ></div>                         
+            </div>          
+            <div class="col-md-1">   
+                <button id="saveRetentionTarget" type="button" class="btn btn-default pull-right" popover-template="templateUrl" popover-trigger="show" ng-click="toggleRetentionPopover()"><i class="fa fa-save"></i></button>
+            </div>
+        </div>
+        <!-- chart toolbar -->
+        <div class="row sl-box-toolbar">
+          <div class="col-md-2">&nbsp;</div>
+          <div class="col-md-10">
+            <div class="btn-group btn-group-sm pull-right" ng-init="showToolbar = false" role="group" ng-show="showToolbar">
+              <!-- show table-->
+              <button class="btn btn-default" ng-init="showTable = false" ng-click="showTable = !showTable" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-line-chart': showTable}"></i></button>  
+              <!-- export data -->
+              <button class="btn btn-default" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa" ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>            
+              <!-- pin to dashboard-->        
+              <button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button> 
+            </div>      
+          </div>        
+        </div>
+        <!-- table-->
+        <div class="row sl-box-content">
+            <div class="col-md-12" ng-show="!showTable">
+              <highchart id="sessions-trend-chart" config="retentionCCO"></highchart>
+            </div>
+            <div class="col-md-12" ng-show="showTable">
+              <div id="retention-grid"  ui-grid="cohortGridOptions" class="sl-grid" ui-grid-pinning ui-grid-exporter></div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+              <div class="col-md-4 tile" ng-repeat="metric in cohortMetrics">
+                    <span class="value">{{metric.value | number}}</span>
+                    <span class="title">{{metric.label}}</span>
+                    <a href="#/segmentation" class="more" ng-class="{'blue': metric.trend >= 0, 'red': metric.trend < 0}">
+                        <i class="fa" ng-class="{'fa-arrow-up': metric.trend >= 0, 'fa-arrow-down': metric.trend < 0}"></i>
+                        <span>{{metric.trend}}% since last week</span>
+                    </a>
+              </div>
+            </div>             
+          </div>
+        </div>    
+      </div> <!-- end of cohort trend chart -->
+      <!--<div class="row  bs-callout bs-callout-info">
+        <div class="col-md-12">
+          <span><strong>Cohort Metrics Over Period: </strong>{{dateRange.startDate | date:'yyyy-MM-dd'}} - {{dateRange.endDate | date:'yyyy-MM-dd'}}</strong></span>
+        </div>
+      </div>  -->    
+    </div>
+    <!-- segment section -->   
+    <div class="col-md-3 sl-box">
+      <!-- box header -->
+      <div class="row sl-box-header sl-box-header-padding">
+        <div class="col-md-8">
+          Saved Segments
+        <span popover-placement="right" popover="This graph shows the conversion trend over a period." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+                <i class="fa fa-question-circle"></i>
+              </span>    
+        </div>          
+      </div>
+      <!-- saved segments -->
+      <div class="row sl-box-content sl-box-segment">
+        <div class="row sl-entity" ng-repeat="(id, segment) in savedSegments" ng-mouseenter="showSegmentToolbar = true" ng-mouseleave="showSegmentToolbar = false">
+          <div class="col-md-8">
+            <h5>{{segment.title}}</h5>
+          </div>
+          <div class="col-md-4">
+            <div class="btn-group btn-group-xs pull-right" role="group" ng-show="showSegmentToolbar">
+              <button class="btn btn-default btn-xs" ng-click="loadSegment(id)"><i class="fa fa-check"></i></button>       
+              <button class="btn btn-default btn-xs" ng-click="removeSegment(id)"><i class="fa fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>       
+    </div>   
+  </div>  
+</div> <!-- end of container -->
+<!--
+<div class="row">&nbsp;</div>
+  <div class="row">&nbsp;</div>  <div class="row">
+    <div class="col-md-1">&nbsp;</div>
+    <div class="col-md-10 "><img class="sl-app-center-img" src="images/coffeebreak.png"/></div>
+    </div>
+  <div class="row">
+    <div class="col-md-1">&nbsp;</div>
+    <div class="col-md-10 sl-app-center-text"><h2><strong>We are brewing this feature...</strong></h2></div>
+  </div>
+</div>
+<div class="modal" ng-show="loadingView">
+  loadingView is a variable defined in the $rootScope
+
+  The loading animation is inspired by http://codepen.io/joni/details/FiKsd
+  <ul id="loading">
+    <li class="bar" ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]"></li>
+  </ul>
+</div>
+-->

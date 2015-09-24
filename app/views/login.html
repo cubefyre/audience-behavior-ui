@@ -1,0 +1,23 @@
+<div class="bg-image"><img src="images/bg.jpg" alt=""></div>  
+  <div class="container">
+    <div class="row center-well">
+      <div class="col-md-4 col-md-offset-4 center-well-reg">
+          <h2> Sign-in</h2>
+          <form name="signinForm" novalidate ng-submit="signDeveloperIn(user)">
+            <div class="form-group" show-errors>
+             <!-- <span class="label label-danger" ng-show="signinForm.email.$error.required">Required!</span>-->
+              <p class="help-block" ng-if="signinForm.email.$error.required">Email is required</p>
+              <p class="help-block" ng-if="signinForm.$error.email">Invalid email address!</p><input type="email" name="email" class="form-control" placeholder="Your email address" required ng-model="user.email">
+            </div>
+            <div class="form-group" show-errors>
+              <p class="help-block" ng-if="signinForm.key.$error.required">Password is required</p>
+              <p class="help-block" ng-if="signinForm.key.$error.maxlength">Invalid key!</p>              
+              <input type="text" name="key" class="form-control" placeholder="Password" required ng-model="user.password" ng-maxlength="56">
+            </div>
+            <button class="btn btn-lg btn-blue" ng-disabled="sign_in_btn_disabled">{{sign_in_btn_text}}</button>
+            <p ng-show="message" ng-bind="message"></p>
+          </form>
+          <!--<h2> Don't have a key, <a href="#/register">request one here</a></h2>-->
+      </div>     
+    </div>
+  </div>

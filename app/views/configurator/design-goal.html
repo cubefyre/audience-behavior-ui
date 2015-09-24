@@ -1,0 +1,137 @@
+<div class="row">
+	<div class="col-md-12 bs-callout bs-callout-info">
+  		<span class="tip-show-hide" ng-init="collapse=true" ng-hide="collapse">  
+		<strong>How to do Goal Analysis?</strong>
+		<p>A custom function that partitions the Event logs by User and orders by Time; only look at data up to 'lookback' days back. For each Goal Event in the User partition, scan backwards to and impact Event and compute the above metrics.</p>
+			Goal Analysis Steps:
+			<ul>
+				<li>Define Goal Events</li>
+				<li>Define Impact Events/Screens for each Goal</li>
+				<li>Define distance metrics</li>
+				<li>Define Lookback Period and Number of Sessions</li>
+				<li>Distance metrics are:</li>
+				<ul>
+					<li>Number of Sessions = Count(Session)</li>
+					<li>Time On Site = Sum(Session.Duration)</li>
+					<li>Clock Time =  GoalEvent.time - Impact.time</li>
+					<li>Number of Impacts since = Count(Event.Name in ImpactEventList) - 1</li>
+				</ul>
+			</ul>
+  		</span>
+  		<a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>
+  	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="row sl-entity">
+			<div class="col-md-6">Select a goal event</div>
+			<div class="col-md-6">
+				<div class="btn-group" dropdown>
+			      <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+			      	{{currentGoalAnalysis.goalEvent}}
+			        <span class="caret"></span>
+			      </button>
+			      <ul class="dropdown-menu">
+					<li ng-repeat="goalEvent in goalEvents">
+					    <a href ng-click="setCurrentGoalEvent(goalEvent)">{{goalEvent}}</a>
+					</li>
+			      </ul>
+			    </div>
+			</div>
+		</div>
+		<div class="row sl-entity">
+			<div class="col-md-6">Select one or more impact events</div>
+			<div class="col-md-6">
+				<div class="inline" ng-dropdown-multiselect="" options="impactEventsWithIds" selected-model="currentSelectedImpactEventIds" extra-settings="eventsSettings" translation-texts="eventsText" checkboxes="true" events= "{ onItemSelect: eventSelected,  onItemDeselect: eventDeselected, onSelectAll: allEventsSelected, onDeselectAll: allEventsUnselected }">
+				</div>		
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8">Select one or more metrics to track</div>
+			<!--<div class="col-md-4">
+				<label>
+			    	<input type="checkbox" ng-click="selectAllMetrics()" ng-checked="isAllMetricsSelected()"> Select All Metrics
+			  	</label>
+				</div>			  
+			-->
+		</div>
+		<div class="row sl-entity">
+		  	<div class="col-md-6" ng-repeat="metric in distanceMetrics">
+			  <label>
+			    <input type="checkbox" ng-click="setCurrentGoalMetric(metric)"> {{metric}}
+			    	<span popover-placement="right" popover="Distance Metric" popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	            	</span>	
+			  </label>
+			</div>
+		</div>
+		<div class="row sl-entity">
+		  	<div class="col-md-6">Lookback period</div>
+		  	<div class="col-md-6">
+				<div class="btn-group" dropdown>
+			      <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+			      	{{currentGoalAnalysis.lookbackPeriod}}
+			        <span class="caret"></span>
+			      </button>
+			      <ul class="dropdown-menu">
+					<li ng-repeat="period in lookbackPeriods">
+					    <a href ng-click="setLookbackPeriod(period)">{{period}}</a>
+					</li>
+			      </ul>
+			    </div>
+			</div>
+		</div>	
+		<div class="row">&nbsp;</div>
+		<div class="row">
+			<div class="col-md-12">
+				<a class="btn btn-default" ng-click="saveCurrentGoalAndStartNewAnalysis()" ng-disabled="currentGoalAnalysis.trackMetrics.length == 0"><i class="fa fa-save"></i>&nbsp;<i class="fa fa-plus"></i> Save and Start New</a>
+				<a class="btn btn-default" ng-click="saveCurrentGoalAnalysis()" ng-disabled="currentGoalAnalysis.trackMetrics.length == 0"><i class="fa fa-save"></i> Save</a>
+				<a class="btn btn-default btn-info" ng-click="resetCurrentGoalAnalysis()"><i class="fa fa-remove"></i> Reset</a>
+			</div>
+		</div>		
+	</div>
+	<div class="col-md-5 col-md-offset-1">
+		<div class="row">
+			<div class="col-md-12 pull-right"><em>Current Model</em></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-12">
+				<pre>{{currentGoalAnalysis}}</pre>
+			</div>
+		</div>
+		<div class="row">&nbsp;</div>
+		<div class="row" ng-if="savedGoalAnalysis.length > 0">
+			<div class="col-md-12"><em>Saved Models</em>
+			<accordion close-others="oneMetricGroupAtATime">
+			    <accordion-group ng-repeat="model in savedGoalAnalysis" ng-init="model.open=false; modelIndex = $index" is-open="model.open">
+			    	<accordion-heading>
+			    		<i class="fa" ng-class="{'fa-chevron-down': model.open, 'fa-chevron-right': !model.open}"></i>
+			    		{{model.name}}
+			    		<div class="model-tool-bar pull-right" ng-click="$event.stopPropagation();">
+					    	<!-- model toolbar -->
+							<div class="btn-group btn-group-xs" role="group">
+								<a class="btn btn-default" ng-click="useGoalAnalysisModel(modelIndex)" tooltip-placement="bottom" tooltip="Edit Model"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-default" ng-click="removeGoalAnalysisModel(modelIndex)" tooltip-placement="bottom" tooltip="Remove Model"><i class="fa fa-remove"></i></a>					  
+							</div>
+			    		</div>
+			    	</accordion-heading>
+			    	<pre>{{model.model}}</pre>
+			    </accordion-group>
+			</accordion>
+		</div>		
+	</div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">&nbsp;</div>
+<div class="row">&nbsp;</div>
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg" ng-click="currentStep()">
+			<i class="fa fa-arrow-left">&nbsp;Back to Design Analysis</i>
+		</a>	
+	</div>
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg pull-right" ng-click="nextStep()" ng-disabled="savedGoalAnalysis.length == 0">
+			Next Step: {{nextStepTitle(3)}}&nbsp;<i class="fa fa-arrow-right"></i>
+		</a>
+	</div>
+</div>	

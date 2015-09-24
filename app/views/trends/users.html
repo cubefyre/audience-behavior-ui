@@ -1,0 +1,98 @@
+<div class="row">
+	<!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+    <div class="col-md-12">	
+	    <div class="input-group date-range-picker pull-right" style="min-width:'50px';">
+			<span class="input-group-addon" id="date-range-picker">
+				<i class="fa fa-calendar"></i>
+			</span>
+			<input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" 
+			ng-model="usersTrend.dateRange" min="dataDateRange.minDate" max="dataDateRange.maxDate" options="userDPO"/>
+		</div>	
+	</div>      
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="row sl-box" ng-mouseenter="showC1Toolbar = true" ng-mouseleave="showC1Toolbar = false">
+			<div class="row sl-box-header sl-box-header-padding">
+			   	<div class="col-md-12">
+			   		Users
+					<span popover-placement="right" popover="This graph shows data on each event in the specified time period. The default view shows the 5 events with the highest total counts." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+			        <i class="fa fa-question-circle"></i>
+			    	</span>		   			
+			   	</div>		    
+			</div>
+			<!-- toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-2">&nbsp;</div>
+				<div class="col-md-10">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showC1Toolbar = false" role="group" ng-show="showC1Toolbar">
+						<!-- export csv button -->
+						<button class="btn btn-default" ng-init="exporting = false" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa fa-file-o"
+						ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>				
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-12" ng-show="!showTable">
+				  	<highchart id="users-trend-chart" config="usersTrendCCO"></highchart>
+				</div>
+				<div class="col-md-12" ng-show="showTable">
+					<!--<div id="trends-grid" ui-grid="trendsGridOptions" class="sl-grid" ui-grid-pinning ui-grid-exporter></div>-->
+				</div>
+			</div> 		
+		</div>		
+	</div>
+	<div class="col-md-6">
+		<div class="row sl-box" ng-mouseenter="showC2Toolbar = true" ng-mouseleave="showC2Toolbar = false">
+			<div class="row sl-box-header sl-box-header-padding">
+			   	<div class="col-md-12">
+			   		Average Events Per User Per Day
+					<span popover-placement="right" popover="This graph shows data on each event in the specified time period. The default view shows the 5 events with the highest total counts." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+			        <i class="fa fa-question-circle"></i>
+			    	</span>		   			
+				    <!-- goal event list -->	
+		            <div class="inline" ng-dropdown-multiselect="" options="goalEventsList" selected-model="selected.goalEvent" 
+		            extra-settings="goalEventsSettings" translation-texts="goalEventsText"></div> 			    	
+			   	</div>		    
+			</div>
+			<!-- toolbar -->
+			<div class="row sl-box-toolbar">
+				<div class="col-md-2">&nbsp;</div>
+				<div class="col-md-10">
+					<div class="btn-group btn-group-sm pull-right" ng-init="showC2Toolbar = false" role="group" ng-show="showC2Toolbar">
+						<!-- export csv button -->
+						<button class="btn btn-default" ng-init="exporting = false" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa fa-file-o"
+						ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+						<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+					</div>			
+				</div>				
+			</div>
+				<!-- chart or table-->
+			<div class="row sl-box-content">
+				<div class="col-md-12" ng-show="!showTable">
+				  	<highchart id="trends-chart" config="usersEventTrendCCO"></highchart>
+				</div>
+				<div class="col-md-12" ng-show="showTable">
+					<div id="trends-grid" ui-grid="trendsGridOptions" class="sl-grid" ui-grid-pinning ui-grid-exporter></div>
+				</div>
+			</div> 		
+		</div>	
+	</div>	
+</div>
+<div class="row  bs-callout bs-callout-info">
+	<div class="col-md-12">
+		<span><strong>Key Session Metrics Over Period: </strong>{{usersTrend.dateRange.startDate | date:'yyyy-MM-dd'}} - {{usersTrend.dateRange.endDate | date:'yyyy-MM-dd'}}</strong></span>
+	</div>
+</div>	
+<div class="row">
+	<div class="col-md-4 tile" ng-repeat="metric in userMetrics">
+        <span class="value">{{metric.value | number}}</span>
+        <span class="title">{{metric.label}}</span>
+        <a href="#/segmentation" class="more" ng-class="{'blue': metric.trend >= 0, 'red': metric.trend < 0}">
+            <i class="fa" ng-class="{'fa-arrow-up': metric.trend >= 0, 'fa-arrow-down': metric.trend < 0}"></i>
+            <span>{{metric.trend}}% since last week</span>
+        </a>
+	</div>
+</div>

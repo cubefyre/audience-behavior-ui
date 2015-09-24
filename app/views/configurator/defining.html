@@ -1,0 +1,76 @@
+<div class="row">
+	<div class="col-md-12 bs-callout bs-callout-info">
+  		<!--<alert type="info" ng-init="hideAlert = false" close="hideAlert = true" ng-hide="hideAlert"></alert>-->
+  		<span class="tip-show-hide" ng-hide="collapse"> 
+  			For each entity, the app predefined commonly used metrics. Build new metrics or edit exisitng metrics using a simple functional language. The app will take care of the ETL and Cube building. Each metric follows this structure:
+  			<ul>
+				<li> Definition </li>
+				<li> Formula </li>
+				<li> Unit of Measure</li>
+				<li> How is Metric Aggregated</li>
+				<li> Compute Rank and/or nTile</li>
+				<li> Metrics maybe parameterized, i.e. they are defined for different input values. For e.g. EventCount is defined for each Event.</li>
+				<li> Time duration associated with a metric (think User) - the time could be daily, weekly, monthly, quarterly, yearly</li>
+				<li> A metric definition can have a lookback period. This is needed when attaching a measure for a Day based on activity that happened in the days prior to the day. So lookback period is relative to the period that the metric is being computed.</li>
+			</ul>	
+  		</span>
+  		<a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>
+  	</div>
+</div>
+<div class="row">
+	<accordion close-others="oneMetricGroupAtATime">
+	    <accordion-group ng-repeat="entity in entityMetrics" ng-init="entityIndex = $index; entityIndex==0 ? entity.open=true : entity.open=false" is-open="entity.open">
+	    	<accordion-heading>
+	    		<i class="fa" ng-class="{'fa-chevron-down': entity.open, 'fa-chevron-right': !entity.open}"></i>
+	    		{{entity.entity}} Metrics
+	    		<div ng-if="entity.open" class="metric-add-new pull-right" ng-click="$event.stopPropagation();">
+		    		<a class="btn btn-default" ng-click="createNewMetric(entityIndex)"><i class="fa fa-plus"></i> Create New Metric</a>	
+	    		</div>
+	    	</accordion-heading>
+	    	<div class="row sl-entity" ng-repeat="metric in entity.metrics" ng-init="metricIndex = $index">
+	    		<div class="col-md-3">
+	    			<!--<span><strong>{{metric.name}}</strong></span>
+	    			<span style="display:block;">{{metric.description}}</span>
+	    			May be use this in the future - http://vitalets.github.io/angular-xeditable/
+	    			-->
+	    			<strong><a href="#" editable-text="metric.name">{{ metric.name }}</a></strong><br/>
+
+	    			<a href="#" editable-textarea="metric.description" e-rows="3" e-cols="15">{{ metric.description }}</a>
+	    			<!--<strong><edit-in-place value="metric.name"></edit-in-place></strong>
+	    			<edit-in-place style="display:block;" value="metric.description"></edit-in-place>-->
+	    		</div> 
+	    		<div class="col-md-4">
+	    			<textarea ng-model="metric.definition" ng-init="metric.changed = false" rows="3" cols="40" ng-change="metric.changed = true"></textarea>
+	    		</div> 	 
+	    		<div class="col-md-2" ng-switch on="metric.changed">
+	    			<div ng-switch-when="false">
+		    			<a class="btn btn-primary" disabled><i class="fa" ng-class="{'fa-check':metric.valid, 'fa-exclamation': !metric.valid}"></i> {{metric.valid ? "Valid" : "Invalid"}}</a>
+		    		</div>
+	    			<div ng-switch-when="true">
+		    			<a class="btn btn-default" ng-click="metric.valid = true; metric.changed = false;"><i class="fa fa-question"></i> Validate</a>
+		    		</div>		    		
+	    		</div>
+	    		<div class="col-md-3">
+				    <div class="btn-group">
+				        <label class="btn btn-default" ng-model="metric.period" btn-radio="'daily'">Daily</label>
+				        <label class="btn btn-default" ng-model="metric.period" btn-radio="'weekly'">Weekly</label>
+				        <label class="btn btn-default" ng-model="metric.period" btn-radio="'monthly'">Monthly</label>
+				    </div>	
+	    		</div>   		
+	    	</div>
+	    </accordion-group>
+	</accordion>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg" ng-click="previousStep()">
+			<i class="fa fa-arrow-left">&nbsp;Previous Step: {{previousStepTitle(2)}}</i>
+		</a>	
+	</div>
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg pull-right" ng-click="nextStep()">
+			Next Step: {{nextStepTitle(2)}}&nbsp;<i class="fa fa-arrow-right"></i>
+		</a>
+	</div>
+</div>	
+

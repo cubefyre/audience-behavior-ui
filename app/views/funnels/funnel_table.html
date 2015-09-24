@@ -1,0 +1,17 @@
+<table class="table table-striped table-bordered table-hover">
+	<thead>
+	    <tr>
+	    	<th>Funnel Data</th>
+	        <th ng-repeat=" header in tableData.headerRow track by $index" class="animate-repeat" style="text-transform:capitalize;">{{header}}</th>
+	    </tr>
+	</thead>
+	<tbody>
+	    <tr ng-repeat="row in tableData.rows track by $index">
+	    	<td ng-repeat="cell in row track by $index" class="animate-repeat">
+		    	<span ng-if="$index  <= 1 ">{{cell}}</span>
+		    	<span ng-if="$index > 1">{{cell}}&nbsp;({{(cell/row[$index - 1])*100 | number:2}}%)</span>
+	    	</td>
+	    </tr>
+	</tbody>
+</table> 
+<div id="funnel-details" ui-grid="{data: funne }" class="grid"></div>

@@ -1,0 +1,66 @@
+<div class="row sl-box" ng-mouseenter="showToolbar = true" ng-mouseleave="showToolbar = false">
+	<div class="row sl-box-header sl-box-header-padding">
+	   	<div class="col-md-5">
+	   		Events
+			<span popover-placement="right" popover="This graph shows data on each event in the specified time period. The default view shows the 5 events with the highest total counts." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	        <i class="fa fa-question-circle"></i>
+	    	</span>		   		
+			<div class="inline" ng-dropdown-multiselect="" options="events" selected-model="selectedEventIds" extra-settings="eventsSettings" translation-texts="eventsText" checkboxes="true" events= "{ onItemSelect: eventSelected,  onItemDeselect: eventDeselected, onSelectAll: allEventsSelected, onDeselectAll: allEventsUnselected }">
+			</div>	
+	   	</div>		    
+	    <div class="col-md-4">	
+		    <div class="input-group date-range-picker pull-right" style="min-width:'50px';">
+				<span class="input-group-addon" id="date-range-picker">
+					<i class="fa fa-calendar"></i>
+				</span>
+				<input aria-describedby="date-range-picker" date-range-picker class="form-control date-picker" type="text" ng-model="eventsTrend.dateRange" min="dataDateRange.minDate" max="dataDateRange.maxDate" options="eventDPO"/>
+			</div>	
+		</div>
+		<div class="col-md-3">
+			<div class="btn-group pull-right" role="group">
+				<div class="btn-group" dropdown>
+				  <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled" style="min-width: 80px;">
+					{{eventDataType}} <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li ng-repeat="eventDataType in eventDataTypes">
+				    	<a href="" ng-click="setEventDataType(eventDataType)">{{eventDataType}}</a>
+				    </li>
+				  </ul>
+				</div>	
+				<div class="btn-group" dropdown>
+				  <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled" style="min-width: 80px;">
+					{{unit}} <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li ng-repeat="unit in units">
+				    	<a href="" ng-click="setUnit(unit)">{{unit}}</a>
+				    </li>
+				  </ul>
+				</div>	
+			</div>			   
+	    </div>
+	</div>
+	<!-- toolbar -->
+	<div class="row sl-box-toolbar">
+		<div class="col-md-2">&nbsp;</div>
+		<div class="col-md-10">
+			<div class="btn-group btn-group-sm pull-right" ng-init="showToolbar = false" role="group" ng-show="showToolbar">
+				<button class="btn btn-default" ng-init="showTable = false" ng-click="changeVizType()" tooltip-placement="top" tooltip="Toggle Table/Chart"><i class="fa" ng-class="{'fa-table': !showTable, 'fa-line-chart': showTable}"></i></button>	
+				<!-- export csv button -->
+				<button class="btn btn-default" ng-init="exporting = false" tooltip-placement="top" tooltip="Export Data" ng-click="exportData()"><i class="fa fa-file-o"
+				ng-class="{'fa-file-o':!exporting, 'fa-circle-o-notch fa-spin':exporting}"></i></button>						
+				<button class="btn btn-default"  tooltip-placement="top" tooltip="Pin to dashboard"><i class="fa fa-thumb-tack"></i></button>	
+			</div>			
+		</div>				
+	</div>
+		<!-- chart or table-->
+	<div class="row sl-box-content">
+		<div class="col-md-12" ng-show="!showTable">
+		  	<highchart id="trends-event-chart" config="eventTrendsCCO"></highchart>
+		</div>
+		<div class="col-md-12" ng-show="showTable">
+			<div id="trends-grid" ui-grid="trendsGridOptions" class="sl-grid" ui-grid-pinning ui-grid-exporter></div>
+		</div>
+	</div> 		
+</div>

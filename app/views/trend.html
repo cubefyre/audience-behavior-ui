@@ -1,0 +1,60 @@
+<div class="container sl-app-container">
+	<div class="row  bs-callout bs-callout-info">
+		<!--<div class="col-md-9 sl-section-header sl-box-header-padding border-left"> -->
+		<div class="col-md-12"> 
+		    <span class="tip-show-hide" ng-hide="collapse"> 
+		    See how your events, sessions and users are trending over a period. Select different periods or apply segments on trends.   
+		  	</span>
+		  	<a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>        
+	    </div>       
+	</div>  
+	<div class="row">
+		<div class="col-md-12 sl-box sl-box-outer">
+		    <div class="row sl-box-header sl-box-header-padding">
+				<tabset justified="true">
+		      		<tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled" ng-click="tabActivated($index)">
+		      			<div class="row">&nbsp;</div>
+		      			<div class="row sl-box-content sl-box-content-outer">
+		      				<div ng-include="tab.contentTemplate"></div>
+		      			</div>
+		    		</tab> 
+				</tabset>
+			</div>
+		</div>		
+	    <!-- segment section -->   
+	    <!--
+	    <div class="col-md-3 sl-box">
+	      <div class="row sl-box-header sl-box-header-padding">
+	        <div class="col-md-8">
+	          Filters & Segments
+	        <span popover-placement="right" popover="This graph shows the conversion trend over a period." popover-trigger="mouseenter" popover-popup-delay="200" popover-append-to-body="true" class="ng-scope">
+	                <i class="fa fa-question-circle"></i>
+	              </span>    
+	        </div>          
+	      </div>
+	      <div class="row sl-box-content sl-box-segment">
+	        <div class="row">
+	          <div class="col-md-7">
+	          </div>
+	          <div class="col-md-5 pull-right">
+	            <div class="btn-group btn-group-sm" role="group">
+	              <button type="button" class="btn btn-default" ng-click="editSegmentl()" tooltip-placement="bottom" tooltip="Edit Funnel"><i class="fa fa-pencil"></i>
+	                </button>
+	              <button type="button" class="btn btn-default" ng-click="deleteSegment" tooltip-placement="bottom" tooltip="Create New Funnel"><i class="fa fa-close"></i></button>              
+	            </div>              
+	          </div>  
+	        </div>    
+	      </div>  
+	    </div> 
+	    -->
+	</div>
+</div> 
+<!-- end of container -->
+<!--
+    <div class="col-md-2">
+      <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="startDate" is-open="sdOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="dateOpened($event, 'sd')" value="adfsf"/>
+    </div>
+    <div class="col-md-2">
+      <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="endDate" is-open="edOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="dateOpened($event, 'ed')"/>
+    </div>
+-->

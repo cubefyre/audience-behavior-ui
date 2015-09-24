@@ -1,0 +1,59 @@
+<div class="row">
+	<div class="col-md-12 bs-callout bs-callout-info">
+  		<!--<alert type="info" ng-init="hideAlert = false" close="hideAlert = true" ng-hide="hideAlert"></alert>-->
+  		<span class="tip-show-hide" ng-hide="collapse">  
+  		 Tell us about the key entities that you often use to define metrics and analysis. We have identified few high-level entities to get you started. 
+  		</span>
+  		<a class="pull-right" ng-click="collapse = !collapse">{{collapse ? "Show Tip" : "Hide Tip"}}</a>  		
+  	</div>
+</div>
+<div class="row sl-entity">
+	<div class="col-md-2"><h3><strong>Include</strong></h3></div>
+	<div class="col-md-2"><h3><strong>Entity</strong></h3></div>
+	<div class="col-md-8"><h3><strong>Attributes & Sample Values</strong></h3></div>
+</div>
+<div class="row sl-entity" ng-repeat="entity in entities" ng-init="entityIndex = $index">
+	<div class="col-md-2">
+	    <div class="btn-group">
+	        <label class="btn btn-default" ng-model="entity.include" btn-radio="true">Yes</label>
+	        <label class="btn btn-default" ng-model="entity.include" btn-radio="false">No</label>
+	    </div>	
+	</div>
+	<div class="col-md-2">
+		<h3>{{entity.entity}}</h3>
+	</div>
+	<div class="col-md-8">
+		<div class="row sl-entity-attribute" ng-repeat="attribute in entity.attributes" ng-init="attributeIndex = $index">
+			<div class="col-md-2">{{attribute.attribute}}</div>
+			<div class="col-md-2">
+			    <div class="btn-group" dropdown>
+			      <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+			        {{attribute.dataType}} <span class="caret"></span>
+			      </button>
+			      <ul class="dropdown-menu">
+					<li ng-repeat="type in dataTypes">
+					    <a href ng-click="setAttributeDataType(entityIndex, attributeIndex, type)">{{type}}</a>
+					</li>
+			      </ul>
+			    </div>				
+			</div>
+			<div class="col-md-8">
+				{{attribute.sampleValues}}
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="row">
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg" ng-click="previousStep()">
+			<i class="fa fa-arrow-left">&nbsp;Previous Step: {{previousStepTitle(1)}}</i>
+		</a>	
+	</div>
+	<div class="col-md-6">
+		<a class="btn btn-default btn-lg pull-right" ng-click="nextStep()">
+			Next Step: {{nextStepTitle(1)}}&nbsp;<i class="fa fa-arrow-right"></i>
+		</a>
+	</div>
+</div>	
+
