@@ -21,7 +21,7 @@ The browser-based responsive app has following functionality:
 - Perform group by analysis for top-N over any period
 
 ![Image](img/SparklineApp-UserTrends.png?raw=true)
-![Image](img/SparklineApp-SessoinTrends.png?raw=true)
+![Image](img/SparklineApp-SessionTrends.png?raw=true)
 ![Image](img/SparklineApp-TrendAnalysis.png?raw=true)
 
 > Conversion Analysis
