@@ -832,8 +832,8 @@ angular.module('sparkyApp')
 	$scope.setCloudLocation = function(cloudLocation){
 		$scope.selectedCloudLocation = cloudLocation;
 	};
-	$scope.secretAccessKey = 'unTfzEA33cY5AXK4+JqFZdBXEBqH+XenHURADlkr';
-	$scope.accessKeyId = 'AKIAIOVG3I235W5NVR4A';
+	$scope.secretAccessKey = '';
+	$scope.accessKeyId = '';
 
 
   });
